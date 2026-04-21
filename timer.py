@@ -6,7 +6,7 @@ def time_settings(list_settings):
     else:
         return list_settings
 
-settings = [int(i) for i in input('whrite work time short break long break, 0 to standart:').split(" ")]
+settings = [int(i) for i in input('write work time short break long break, 0 to standard:').split(" ")]
 print(time_settings(settings))
 
 work_time = time_settings(settings)[0]*60
