@@ -1,5 +1,5 @@
 
-from PyQt6.QtWidgets import QApplication, QLabel, QLineEdit, QMainWindow, QPushButton, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget
 from PyQt6.QtCore import QSize, QTimer, Qt
 
 import sys
@@ -90,7 +90,6 @@ class MainWindow(QMainWindow):
         else:
             self.button_start.setText("START")
             self.timer.stop()
-
 
 
 
