@@ -1,7 +1,6 @@
 import asyncio
-import signal
 
-from desktop_notifier import DesktopNotifier, Urgency, Button, ReplyField, DEFAULT_SOUND
+from desktop_notifier import DesktopNotifier, Button, DEFAULT_SOUND
 
 
 async def _send_notification(title, message):
@@ -20,13 +19,9 @@ async def _send_notification(title, message):
         sound=DEFAULT_SOUND,
     )
 
-    stop_event = asyncio.Event()
-    loop = asyncio.get_running_loop()
+    await asyncio.sleep(5)
 
-    loop.add_signal_handler(signal.SIGINT, stop_event.set)
-    loop.add_signal_handler(signal.SIGTERM, stop_event.set)
-
-    await stop_event.wait()
-
-def send_notification(title, message):    
+def send_notification(title, message):
     asyncio.run(_send_notification(title, message))
+
+send_notification("PomodoroTMT", "PomodoroTMT")
