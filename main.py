@@ -1,17 +1,17 @@
 from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget
 from PyQt6.QtCore import QSize, QTimer, Qt
 import sys
-from notification import send_notification
+from notification import notifier   
 
-send_notification('blablabla', 'blablabla')
+notifier.send_notification('blablabla', 'blablabla')
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         
         self.mode = 'work'
-        self.work_time = 0.5
-        self.short_break = 0.5
+        self.work_time = 25
+        self.short_break = 5
         self.long_break = 15
         self.session_count = 0
         self.next_time = int(self.short_break*60)
@@ -71,12 +71,12 @@ class MainWindow(QMainWindow):
                     self.remaining = int(self.long_break*60)
                     self.session_count = 0
                     self.next_time = int(self.work_time*60)
-                    send_notification('Time to take long break', f'long break: {self.long_break} minutes')
+                    notifier.send_notification('Time to take long break', f'long break: {self.long_break} minutes')
                 else:
                     self.mode = 'break'
                     self.remaining = int(self.short_break*60)
                     self.next_time = int(self.work_time*60)
-                    send_notification('Time to take short break', f'short break: {self.short_break} minutes')
+                    notifier.send_notification('Time to take short break', f'short break: {self.short_break} minutes')
 
             else:
                 self.mode = 'work'
@@ -85,7 +85,7 @@ class MainWindow(QMainWindow):
                     self.next_time = int(self.long_break*60)
                 else:
                     self.next_time = int(self.short_break*60)
-                send_notification('Time to get to work', f'work: {self.work_time} minutes')
+                notifier.send_notification('Time to get to work', f'work: {self.work_time} minutes')
 
     def btn_clicked(self):
         if self.button_start.text() == "START":

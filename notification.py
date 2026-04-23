@@ -1,27 +1,36 @@
 import asyncio
+import threading
 
-from desktop_notifier import DesktopNotifier, Button, DEFAULT_SOUND
+from desktop_notifier import DesktopNotifier, DEFAULT_SOUND
 
 
-async def _send_notification(title, message):
-    notifier = DesktopNotifier(app_name="PomodoroTMT")
+class NotificationManager:
+    def __init__(self):
+        self.loop = asyncio.new_event_loop()
+        self.thread = threading.Thread(target=self._run_loop, daemon=True)
+        self.thread.start()
+    
+    def _run_loop(self):
+        asyncio.set_event_loop(self.loop)
+        self.loop.run_forever()
 
-    await notifier.send(
-        title=title,
-        message=message,
-        buttons = [Button(
-                title="Stop/start",
-                on_pressed=lambda: print("stopstart"),
-            )],
-        on_dispatched=lambda: print("Notification showing"),
-        on_clicked=lambda: print("Notification clicked"),
-        on_dismissed=lambda: print("Notification dismissed"),
-        sound=DEFAULT_SOUND,
-    )
+    async def _send_notification(self, title, message):
+        notifier = DesktopNotifier(app_name='PomodoroTMT')
 
-    await asyncio.sleep(5)
+        await notifier.send(
+            title=title,
+            message=message,
+            sound=DEFAULT_SOUND,
+        )
+    
+    def send_notification(self, title, message):
+        asyncio.run_coroutine_threadsafe(
+            self._send_notification(title, message),
+            self.loop,
+        )
 
-def send_notification(title, message):
-    asyncio.run(_send_notification(title, message))
+    def stop(self):
+        self.loop.call_soon_threadsafe(self.loop.stop)
+        self.thread.join(timeout=1)
 
-send_notification("PomodoroTMT", "PomodoroTMT")
+notifier = NotificationManager()
